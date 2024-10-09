@@ -1,9 +1,36 @@
-// import express from 'express';
-// import { BookingController } from './booking.controller';
+import express from 'express';
+import { BookingValidation } from './booking.validation';
+import { BookingControllers } from './booking.controller';
+import validateRequest from '../../middlewares/validateRequest';
+import auth from '../../middlewares/auth';
+import { USER_ROLE } from '../User/user.interface';
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.post('/bookings',  BookingController.createBooking);
-// // Other routes (view all bookings, view bookings by user, cancel booking, etc.) can be added similarly.
+router.post(
+  '/bookings',
+  auth(USER_ROLE.user),
+  validateRequest(BookingValidation.createBooking),
+  BookingControllers.createBooking,
+);
 
-// export const bookingRoutes = router;
+router.get(
+  '/bookings',
+  auth(USER_ROLE.admin),
+  BookingControllers.getAllBooking,
+);
+router.get(
+  '/bookings/user',
+  auth(USER_ROLE.user),
+  BookingControllers.getAllBookingByUser,
+);
+
+router.delete(
+  '/bookings/:id',
+  auth(USER_ROLE.user),
+  BookingControllers.deleteBookingByUser,
+);
+
+router.get('/check-availability', BookingControllers.checkAvailability);
+
+export const BookingRoutes = router;

@@ -1,46 +1,45 @@
 import httpStatus from "http-status";
-import config from "../../config";
 import AppError from "../../errors/AppError";
-import { TUser } from "../user/user.interface";
-import { User } from "../user/user.model";
-import { isPasswordMAtched } from "./auth.utils";
+import { User } from "../User/user.model";
 import jwt from "jsonwebtoken";
+import config from "../../config";
 
-const signUp = async (payload: TUser): Promise<any> => {
-  const user = await User.findOne({ email: [payload.email] });
-  if (user) {
-    throw new AppError(httpStatus.CONFLICT, "User Already Exists!");
-  }
-  const newUser = await User.create(payload);
-  return newUser;
+export type TLoginUser = {
+  email: string;
+  password: string;
 };
 
-const signIn = async (payload: TUser): Promise<any> => {
-  const user = await User.findOne({ email: [payload.email] }).select(
-    "+password"
-  );
+const loginUserService = async (payload: TLoginUser) => {
+  const user = await User.isUsersExistsByCustomId(payload?.email);
+
+
+  //* check user and password
   if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, "User Not Found!");
+    throw new AppError(httpStatus.NOT_FOUND, "This user is not found!");
   }
 
-  if (!(await isPasswordMAtched(payload.password, user.password))) {
-    throw new AppError(httpStatus.CONFLICT, "Password Not Matched");
+  const isPasswordMatched = await User.isPasswordMatched(
+    payload?.password,
+    user?.password
+  );
+
+  if (!isPasswordMatched) {
+    throw new AppError(httpStatus.FORBIDDEN, "Password do not matched.");
   }
+
+  // Create token and sent to the client
   const jwtPayload = {
-    email: user.email,
+    userEmail: user.email,
     role: user.role,
   };
+
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
-    expiresIn: config.jwt_access_expire_in,
+    expiresIn: config.jwt_access_expires_in,
   });
-  const refreshToken = jwt.sign(
-    jwtPayload,
-    config.jwt_access_secret as string,
-    {
-      expiresIn: config.jwt_access_expire_in,
-    }
-  );
-  return { accessToken, refreshToken };
+
+  return { accessToken, user };
 };
 
-export const authService = { signUp, signIn };
+export const AuthServices = {
+  loginUserService,
+};

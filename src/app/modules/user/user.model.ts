@@ -1,75 +1,65 @@
-import { model, Schema } from "mongoose";
-import { TUser } from "./user.interface";
-import bcrypt from "bcrypt";
-import config from "../../config";
-import { user_role } from "./user.constants";
-const userSchema = new Schema<TUser>(
-  {
-    name: {
-      type: String,
-      required: true,
-    },
-    email: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    role: {
-      type: String,
-      enum: Object.keys(user_role),
-      required: true,
-    },
-    password: {
-      type: String,
-      required: true,
-      select: 0,
-    },
-    phone: {
-      type: String,
-      required: true,
-    },
-    address: {
-      type: String,
-      required: true,
-    },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-      select: 0,
+import { Schema, model } from 'mongoose';
+import { TUser, UserModel } from './user.interface';
+import validator from 'validator';
+import bcrypt from 'bcrypt';
+import config from '../../config';
+
+const userSchema = new Schema<TUser, UserModel>({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    validate: {
+      validator: (value: string) => validator.isEmail(value),
+      message: '{VALUE} is not valid email type',
     },
   },
-  {
-    timestamps: true,
-    versionKey: false,
-    toJSON: {
-      transform: function (doc, ret) {
-        delete ret.password;
-        delete ret.isDeleted;
-        return ret;
-      },
-    },
-    toObject: {
-      transform: function (doc, ret) {
-        delete ret.password;
-        delete ret.isDeleted;
-        return ret;
-      },
-    },
+  password: {
+    type: String,
+    required: true,
+    select: false,
+  },
+  phone: { type: String, required: true },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+  },
+  address: { type: String, required: true },
+});
+
+// pre save middleware / hook
+userSchema.pre('save', async function (next) {
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this; // current document
+  // hashing password and save into DB
+  if (user.isModified('password')) {
+    user.password = await bcrypt.hash(
+      user.password,
+      Number(config.bcrypt_salt_rounds),
+    );
   }
-);
-userSchema.pre("save", async function (next) {
-  const user = this;
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds)
-  );
-
-  next();
-});
-userSchema.post("save", function (doc, next) {
-  doc.password = "";
   next();
 });
 
-export const User = model<TUser>("user", userSchema);
-// export const UserSignIn = model<TUserSignIn>("user", userSignInSchema);
+// set empty "" after saving password
+userSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
+});
+
+userSchema.statics.isUsersExistsByCustomId = async function (email: string) {
+  return await User.findOne({ email }).select('+password');
+};
+
+userSchema.statics.isPasswordMatched = async function (
+  plainTextPassword,
+  hashedPassword,
+) {
+  return await bcrypt.compare(plainTextPassword, hashedPassword);
+};
+
+export const User = model<TUser, UserModel>('User', userSchema);

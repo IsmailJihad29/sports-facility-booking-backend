@@ -1,41 +1,42 @@
-import { z } from "zod";
+import { z } from 'zod';
 
-// Define Zod schema for car validation
-const timeRegex = /^([0-1][0-9]|2[0-3]):([0-5][0-9])$/;
-const createFacilityValidationSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  description: z.string().min(1, { message: "Description is required" }),
-  location: z.string().min(1, { message: "Description is required" }),
+const createFacility = z.object({
+  body: z.object({
+    name: z.string().nonempty({ message: 'Name is required' }),
 
-  pricePerHour: z
-    .number({ required_error: "Price per hour is required" })
-    .positive({ message: "Price must be a positive number" }),
+    description: z.string().nonempty({ message: 'Description is required' }),
 
-  isDeleted: z.boolean().optional(),
+    pricePerHour: z
+      .number()
+      .nonnegative({ message: 'Price per hour must be a non-negative number' }),
+
+    location: z.string().nonempty({ message: 'Location is required' }),
+  }),
 });
 
-const updateFacilityValidationSchema = z.object({
-  name: z.string().min(1).optional(),
-  description: z.string().min(1).optional(),
+const updateFacility = z.object({
+  body: z.object({
+    name: z.string().nonempty({ message: 'Name is required' }).optional(),
 
-  pricePerHour: z
-    .number({ required_error: "Price per hour is required" })
-    .positive({ message: "Price must be a positive number" })
-    .optional(),
-  isDeleted: z.boolean().optional(),
-});
-const returnValidationSchema = z.object({
-  bookingId: z.string().min(1, "Booking ID is required").optional(),
-  startTime: z
-    .string({
-      required_error: "Start time is required",
-      invalid_type_error: "Start time must be a string",
-    })
-    .regex(timeRegex, "Start time must be in the format HH:MM"),
+    description: z
+      .string()
+      .nonempty({ message: 'Description is required' })
+      .optional(),
+
+    pricePerHour: z
+      .number()
+      .nonnegative({ message: 'Price per hour must be a non-negative number' })
+      .optional(),
+
+    location: z
+      .string()
+      .nonempty({ message: 'Location is required' })
+      .optional(),
+    image: z.string().nonempty({ message: 'Image is required' }).optional(),
+  }),
 });
 
-export const facilityValidation = {
-  createFacilityValidationSchema,
-  updateFacilityValidationSchema,
-  returnValidationSchema,
+export const FacilityValidation = {
+  createFacility,
+  updateFacility,
 };

@@ -1,36 +1,25 @@
 import httpStatus from "http-status";
-import catchAsync from "../utils/catchAsync";
-import sendResponse from "../utils/sendResponse";
-import { authService } from "./auth.service";
-import config from "../../config";
-import { User } from "../user/user.model";
+import catchAsync from "../../utils/catchAsync";
+import { AuthServices } from "./auth.service";
 
-const signUp = catchAsync(async (req, res) => {
-  const result = await authService.signUp(req.body);
-  sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+const loginUser = catchAsync(async (req, res) => {
+  const result = await AuthServices.loginUserService(req.body);
+  res.status(httpStatus.OK).json({
     success: true,
-    message: "User registered successfully",
-    data: result,
-  });
-});
-const signIn = catchAsync(async (req, res) => {
-  const { accessToken, refreshToken } = await authService.signIn(req.body);
-  res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: config.node_env === "production",
-  });
-  const email = req.body.email;
-  const data = await User.findOne({ email });
-  sendResponse(res, {
     statusCode: httpStatus.OK,
-    success: true,
-    message: "User logged in successfully",
-    data: data,
-    token: accessToken,
+    message: "User Logged In Successfully",
+    token: result?.accessToken,
+    data: {
+      _id: result?.user?._id,
+      name: result?.user?.name,
+      email: result?.user?.email,
+      role: result?.user?.role,
+      phone: result?.user?.phone,
+      address: result?.user?.address,
+    },
   });
 });
-export const authController = {
-  signIn,
-  signUp,
+
+export const AuthControllers = {
+  loginUser,
 };

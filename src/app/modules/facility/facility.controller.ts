@@ -1,74 +1,61 @@
 import httpStatus from "http-status";
-import catchAsync from "../utils/catchAsync";
-import sendResponse from "../utils/sendResponse";
-import { facilityService } from "./facility.service";
+import catchAsync from "../../utils/catchAsync";
+import sendResponse from "../../utils/sendResponse";
+import { FacilityServices } from "./facility.service";
+import { Request, Response } from "express";
 
-
-//* create a facility
+//*create facility
 const createFacility = catchAsync(async (req, res) => {
-  const facilityData = req.body;
-  const result = await facilityService.createFacilityIntoDb(facilityData);
-  sendResponse(res, {
-    statusCode: httpStatus.CREATED,
-    success: true,
-    message: "Facility created successfully",
-    data: result,
-  });
-});
-
-
-//* get all facility
-const getAllFacility = catchAsync(async (req, res) => {
-  const result = await facilityService.getAllFacilityFromDb();
-  if (!result || (Array.isArray(result) && result.length === 0)) {
-    return sendResponse(res, {
-      statusCode: httpStatus.NOT_FOUND,
-      success: false,
-      message: "No data found",
-      data: [],
-    });
-  }
+  const facility = req.body;
+  const result = await FacilityServices.createFacilityIntoDB(facility);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Facility retrieved successfully",
+    message: "Facility added successfully",
     data: result,
   });
 });
 
-//* get single facility
-const getSingleFacility = catchAsync(async (req, res) => {
-  const result = await facilityService.getSingleFacilityFromDB(req.params.id);
-  if (!result || (Array.isArray(result) && result.length === 0)) {
-    return sendResponse(res, {
-      statusCode: httpStatus.NOT_FOUND,
-      success: false,
-      message: "No data found",
-      data: [],
-    });
-  }
+
+
+
+const getAllFacilities = catchAsync(async (req, res) => {
+  const result = await FacilityServices.getAllFacilitiesFromDB(req.query);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Facility retrieved successfully",
+    message: "Facilities retrieved successfully",
     data: result,
   });
 });
 
+const getSingleFacility = async (req: Request, res: Response) => {
+  try {
+    const { facilityId } = req.params;
+    const result = await FacilityServices.getSingleFacilityFromDB(facilityId);
+    res.status(200).json({
+      success: true,
+      message: "Facility fetched successfully!",
+      data: result,
+    });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || "something went wrong",
+      error: err,
+    });
+  }
+};
 
-//* update faiclity
+
+//* update facility
 const updateFacility = catchAsync(async (req, res) => {
-  const result = await facilityService.updateFacilityIntoDB(req.params.id, req.body);
-  if (!result || (Array.isArray(result) && result.length === 0)) {
-    // If no data is found, send this response
-    return sendResponse(res, {
-      statusCode: httpStatus.NOT_FOUND,
-      success: false,
-      message: "No data found",
-      data: [],
-    });
-  }
-  // If data is found, send the success response
+  const { id } = req.params;
+  const faculty = req.body;
+  const result = await FacilityServices.updateFacilityInDB(id, faculty);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -80,50 +67,21 @@ const updateFacility = catchAsync(async (req, res) => {
 
 //* delete facility
 const deleteFacility = catchAsync(async (req, res) => {
-  const result = await facilityService.deleteFacilityFromDB(req.params._id);
-  if (!result || (Array.isArray(result) && result.length === 0)) {
-    // If no data is found, send this response
-    return sendResponse(res, {
-      statusCode: httpStatus.NOT_FOUND,
-      success: false,
-      message: "No data found",
-      data: [],
-    });
-  }
+  const { id } = req.params;
+  const result = await FacilityServices.deleteFacilityFromDB(id);
+
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "Facility Deleted successfully",
+    message: "Facility deleteded successfully",
     data: result,
   });
 });
 
-
-
-
-// const returnCarUpdate = catchAsync(async (req, res) => {
-//   const result = await facilityService.returnCarUpdateIntoDB(req.body);
-//   if (!result || (Array.isArray(result) && result.length === 0)) {
-//     // If no data is found, send this response
-//     return sendResponse(res, {
-//       statusCode: httpStatus.NOT_FOUND,
-//       success: false,
-//       message: "No data found",
-//       data: [],
-//     });
-//   }
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Car returned successfully",
-//     data: result,
-//   });
-// });
-export const facilityController = {
+export const FacilityControllers = {
   createFacility,
-  getAllFacility,
-  getSingleFacility,
   updateFacility,
+  getAllFacilities,
+  getSingleFacility,
   deleteFacility,
-  
 };

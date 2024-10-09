@@ -1,13 +1,47 @@
 import { z } from 'zod';
 
-export const createBookingSchema = z.object({
-  date: z.string().refine((val) => !isNaN(new Date(val).getTime()), {
-    message: "Invalid date format",
+const timeStringSchema = z.string().refine(
+  (time) => {
+    const regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/; // 00-09 10-19 20-23
+    return regex.test(time);
+  },
+  {
+    message: 'Invalid time format , expected "HH:MM" in 24 hours format',
+  },
+);
+
+// Date format validation (YYYY-MM-DD)
+const dateStringSchema = z.string().refine(
+  (date) => {
+    const regex = /^\d{4}-\d{2}-\d{2}$/;
+    return regex.test(date);
+  },
+  {
+    message: 'Invalid date format, expected "YYYY-MM-DD"',
+  },
+);
+
+const createBooking = z.object({
+  body: z.object({
+    date: dateStringSchema,
+    startTime: timeStringSchema, // Add specific time format validation if needed
+    endTime: timeStringSchema, // Add specific time format validation if needed
+    user: z.string({ required_error: 'user is required' }).optional(),
+    facility: z.string({ required_error: 'Facility is required' }),
+    payableAmount: z
+      .number()
+      .optional()
+      .refine((val) => val === undefined || val >= 0, {
+        message: 'Payable amount must be a positive number.',
+      }),
+    isBooked: z
+      .enum(['confirmed', 'unconfirmed', 'canceled'], {
+        required_error: 'Booking status is required.',
+      })
+      .optional(),
   }),
-  user: z.string().min(1, "User ID is required").optional(),
-  startTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format. Use HH:MM."),
-  endTime: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format. Use HH:MM."),
-  facility: z.string().min( 1, "Invalid facility ID"),
 });
 
-
+export const BookingValidation = {
+  createBooking,
+};

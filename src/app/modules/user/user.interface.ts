@@ -1,12 +1,29 @@
-import { user_role } from "./user.constants";
+/* eslint-disable no-unused-vars */
+import { Model } from 'mongoose';
 
-export type TUser = {
+export const USER_ROLE = {
+  user: 'user',
+  admin: 'admin',
+} as const;
+
+
+export interface TUser {
+  _id?: string;
   name: string;
   email: string;
-  // role: "user" | "admin";
-  role: keyof typeof user_role;
   password: string;
   phone: string;
+  role: 'admin' | 'user';
   address: string;
-  isDeleted: boolean;
-};
+}
+
+export interface UserModel extends Model<TUser> {
+  // instance methods checking if the user exists
+  isUsersExistsByCustomId(email: string): Promise<TUser>;
+  isPasswordMatched(
+    plainTextPassword: string,
+    hashedPassword: string,
+  ): Promise<boolean>;
+}
+
+export type TUserRole = keyof typeof USER_ROLE;

@@ -1,20 +1,39 @@
-import cors from "cors";
-import express, { Application, Request, Response } from "express";
-import router from "./app/routes";
-import globalErrorHandler from "./app/modules/middleware/globalErrorHandler";
-import notFound from "./app/modules/middleware/notFound";
+import express, { Application, Request, Response } from 'express';
+import cors from 'cors';
+import router from './app/routes';
+import notFound from './app/middlewares/notFound';
+import globalErrorHandler from './app/middlewares/globalErrorHandler';
+// import config from './app/config';
+import path from 'path';
 
 const app: Application = express();
 
+// parsers
 app.use(express.json());
-app.use(cors());
 
-app.use("/api", router);
+// applications
+// app.use('/api/v1/students');
+app.use(
+  cors({
+    origin: ['http://localhost:5173', 'https://sports-facility-v5.netlify.app'],
+    credentials: true,
+  }),
+);
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello Next Level Players, Game Ground Is On. Book your slot");
-});
+app.use(express.static(path.join(__dirname, 'public')));
+
+const getAController = (req: Request, res: Response) => {
+  res.send(
+    'Hello, Next level Developer!. This project is about sports booking platform',
+  );
+};
+// applications
+app.get('/', getAController);
+app.use('/api', router);
+
 app.use(globalErrorHandler);
+
+// NOt Found
 app.use(notFound);
 
 export default app;

@@ -1,15 +1,19 @@
-import dotenv from "dotenv";
-import path from "path";
-dotenv.config({ path: path.join(process.cwd(), ".env") });
+import dotenv from 'dotenv';
+import path from 'path';
+
+dotenv.config({ path: path.join(process.cwd(), '.env') });
 
 export default {
-  node_env: process.env.NODE_ENV,
+  // base_url: process.env.BASE_URL,
+  // base_url_frontend: process.env.BASE_URL_Frontend,
   port: process.env.PORT,
+  // node_dev: process.env.NODE_ENV,
   database_url: process.env.DATABASE_URL,
   bcrypt_salt_rounds: process.env.BCRYPT_SALT_ROUNDS,
-  default_password: process.env.DEFAULT_PASS,
   jwt_access_secret: process.env.JWT_ACCESS_SECRET,
-  jwt_access_expire_in: process.env.JWT_ACCESS_EXPIRE_IN,
-  jwt_refresh_secret: process.env.JWT_REFRESH_SECRET,
-  jwt_refresh_expire_in: process.env.JWT_REFRESH_EXPIRE_IN,
+  jwt_access_expires_in: process.env.JWT_ACCESS_EXPIRE_IN,
+  // store_id: process.env.STORE_ID,
+  // signature_key: process.env.SIGNATURE_KEY,
+  payment_url: process.env.PAYMENT_URL,
+  payment_verify_url: process.env.PAYMENT_VERIFY_URL,
 };
