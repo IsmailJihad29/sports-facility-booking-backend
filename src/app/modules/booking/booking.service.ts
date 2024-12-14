@@ -7,9 +7,73 @@ import { formatDate, timeConflict, validateDateFormat } from './booking.utils';
 import { User } from '../User/user.model';
 import { JwtPayload } from 'jsonwebtoken';
 import QueryBuilder from '../../builder/QueryBuilder';
+import { initialPayment } from '../Payment/payment.utils';
 
 
 //* create booking
+// const createBookingIntoDB = async (
+//   userEmail: string,
+//   payload: Partial<TBooking>,
+// ) => {
+//   const { facility, startTime, endTime, date } = payload;
+//   const startDateTime = new Date(`${date}T${startTime}`);
+//   const endDateTime = new Date(`${date}T${endTime}`);
+
+//   const isFacilityExist = await Facility.findById(facility);
+//   if (!isFacilityExist || isFacilityExist.isDeleted === true) {
+//     throw new AppError(httpStatus.NOT_FOUND, 'Facility not found');
+//   }
+
+//   const durationHours =
+//     (endDateTime.getTime() - startDateTime.getTime()) / (1000 * 60 * 60);
+
+//   const payableAmount = durationHours * isFacilityExist.pricePerHour;
+//   if (payableAmount <= 0) {
+//     throw new AppError(
+//       httpStatus.NOT_ACCEPTABLE,
+//       'End Time must be greater then Start time.',
+//     );
+//   }
+
+//   const assignSchedules = await Booking.find({
+//     facility,
+//     date: { $in: date },
+//   }).select('date startTime endTime');
+
+//   const newSchedule = {
+//     date,
+//     startTime,
+//     endTime,
+//   };
+
+//   if (timeConflict(assignSchedules, newSchedule as TSchedule)) {
+//     throw new AppError(
+//       httpStatus.CONFLICT,
+//       `This facility is not available at that time! choose other time or date`,
+//     );
+//   }
+
+//   const user = await User.isUsersExistsByCustomId(userEmail);
+//   const userId = user?._id;
+
+//   const transactionId = `TXN-${Date.now()}`;
+
+//   const result = await Booking.create({
+//     date,
+//     endTime,
+//     facility,
+//     isBooked: 'confirmed',
+//     payableAmount,
+//     startTime,
+//     user: userId,
+//     paymentStatus: 'pending',
+//     transactionId,
+//   });
+
+//   await result.save();
+//   return result;
+// };
+
 const createBookingIntoDB = async (
   userEmail: string,
   payload: Partial<TBooking>,
@@ -70,10 +134,21 @@ const createBookingIntoDB = async (
   });
 
   await result.save();
-  return result;
+
+  // Added Payment
+
+  const paymentData = {
+    transactionId,
+    amount: payableAmount,
+    customerName: user.name,
+    customerEmail: user.email,
+    customerPhone: user.phone,
+    customerAddress: user.address,
+  };
+  const paymentSession = await initialPayment(paymentData);
+
+  return {paymentSession, result};
 };
-
-
 
 //* get all bookings by admin
 const getAllBookingFromDB = async (query: Record<string, unknown>) => {

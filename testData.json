@@ -1,0 +1,82 @@
+[
+    {
+      "name": "Gymnasium",
+      "description": "This indoor gymnasium offers a spacious, air-conditioned environment equipped with state-of-the-art machines for cardio, strength training, and personal fitness classes. Personal trainers are available to assist, and the facility features dedicated zones for different types of workouts, from weight training to high-intensity interval training (HIIT).",
+      "pricePerHour": 45,
+      "location": "333 Fit Avenue, Springfield",
+      "isDeleted": false,
+      "image": "https://i.ibb.co.com/2dszCjt/Firefly-A-high-quality-image-of-an-indoor-gymnasium-with-modern-equipment-to-perform-training-and-ex.jpg"
+    },
+    {
+      "name": "Football Field",
+      "description": "A full-sized football field with a pristine natural grass surface. The field is suitable for both professional matches and practice sessions, complete with large stands for spectators. The facility is located in a well-maintained stadium with floodlights for evening games and high-quality goals at each end.",
+      "pricePerHour": 50,
+      "location": "123 Stadium Road, Springfield",
+      "isDeleted": false,
+      "image": "https://i.ibb.co.com/Y03rhwp/Firefly-A-full-sized-football-field-with-natural-grass-sports-ground-and-soccer-ball-in-the-middle.jpg"
+    },
+    {
+      "name": "Cricket Ground",
+      "description": "A professional-level cricket ground featuring a well-maintained grass pitch, ideal for tournaments and local matches. The facility includes a pavilion for players, floodlights for nighttime games, and a well-groomed outfield to enhance the playing experience.",
+      "pricePerHour": 70,
+      "location": "444 Cricket St, Springfield",
+      "isDeleted": false,
+      "image": "https://example.com/images/cricket_ground.jpg"
+    },
+    {
+      "name": "Basketball Court",
+      "description": "This indoor basketball court boasts a polished hardwood surface and professional-grade hoops. The court is marked with official lines for competitive play and includes a spectator area. The facility is perfect for both casual and professional-level games, with modern lighting for evening sessions.",
+      "pricePerHour": 40,
+      "location": "789 Sports Complex, Springfield",
+      "isDeleted": false,
+      "image": "https://i.ibb.co.com/pKKjm9K/Firefly-An-indoor-basketball-court-with-polished-hardwood-floors-players-are-competing-in-the-match.jpg"
+    },
+    {
+      "name": "Tennis Court",
+      "description": "An outdoor tennis court featuring a clay surface, ideal for players looking to practice or compete on a professional-grade court. The facility is suitable for tournaments and offers a relaxing environment for both singles and doubles play.",
+      "pricePerHour": 35,
+      "location": "222 Tennis Lane, Springfield",
+      "isDeleted": false,
+      "image": "https://i.ibb.co.com/Xt94pdR/Firefly-tennis-court-in-tropical-garden-with-summer-blue-sky-background-playing-the-ball-on-the-gro.jpg"
+    },
+    {
+      "name": "Swimming Pool",
+      "description": "Olympic-sized swimming pool with heated water, perfect for competitive swimming, training, or casual lap swimming. The facility is indoors, ensuring comfortable conditions year-round, with seating areas for spectators.",
+      "pricePerHour": 60,
+      "location": "555 Aqua Park, Springfield",
+      "isDeleted": false,
+      "image": "https://i.ibb.co.com/MBmMQHv/Firefly-Olympic-sized-heated-swimming-pool-players-are-swimming-92384.jpg"
+    },
+    {
+      "name": "Squash Court",
+      "description": "An air-conditioned squash court with professional-grade flooring. The court is designed for competitive play, offering excellent lighting and spectator seating, making it suitable for both casual matches and tournaments.",
+      "pricePerHour": 28,
+      "location": "666 Racket Club, Springfield",
+      "isDeleted": false,
+      "image": "https://i.ibb.co.com/0ZT5P9V/Firefly-Squash-Court-and-players-are-ready-for-training-with-ball-77703.jpg"
+    },
+    {
+      "name": "Tennis Court",
+      "description": "Outdoor tennis court with a synthetic surface, perfect for both professional and casual players. The court is located in a spacious sports complex and offers well-maintained facilities for a quality playing experience.",
+      "pricePerHour": 30,
+      "location": "456 Sports Ave, Springfield",
+      "isDeleted": false,
+      "image": "https://i.ibb.co.com/Nx0bt0f/Firefly-Tennis-Court-ball-on-the-floor-on-the-floor-92384.jpg"
+    },
+    {
+      "name": "Badminton Court",
+      "description": "Indoor badminton court with wooden flooring and bright LED lighting. The court is equipped for competitive matches and casual play, offering a great environment for players of all levels.",
+      "pricePerHour": 25,
+      "location": "101 Indoor Arena, Springfield",
+      "isDeleted": false,
+      "image": "https://i.ibb.co.com/MfbksD0/Firefly-Indoor-badminton-court-with-racquet-and-shuttlecock-on-the-floor-36540.jpg"
+    },
+    {
+      "name": "Volleyball Court",
+      "description": "Outdoor volleyball court with a sand surface, located in a beach sports complex. The facility is perfect for casual games or beach volleyball tournaments, offering a scenic and enjoyable atmosphere.",
+      "pricePerHour": 20,
+      "location": "777 Beach Sports Complex, Springfield",
+      "isDeleted": false,
+      "image": "https://i.ibb.co.com/dmQxMJF/Firefly-volleyball-court-with-a-sand-surface-ball-on-the-floor-77703.jpg"
+    }
+  ]

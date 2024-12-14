@@ -10,12 +10,13 @@ const app: Application = express();
 
 // parsers
 app.use(express.json());
+app.use(cors())
 
 // applications
 // app.use('/api/v1/students');
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://sports-facility-v5.netlify.app'],
+    origin: ['http://localhost:5173', 'https://nature-nest-assign-4.vercel.app'],
     credentials: true,
   }),
 );
