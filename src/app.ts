@@ -12,7 +12,7 @@ const app: Application = express();
 app.use(express.json());
 const allowedOrigins = [ ]; // Add your frontend URL(s) here
 app.use(cors({
-  origin: [ 'http://localhost:3000','https://game-ground-ass5.vercel.app', 'http://localhost:5173'] ,// Replace with your frontend URL
+  origin: [ "https://sports-facility-booking-backend-jet.vercel.app" ,'http://localhost:3000','https://game-ground-ass5.vercel.app', 'http://localhost:5173'] ,// Replace with your frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // HTTP methods you want to allow
   credentials: true, // For cookies/authentication
 }));
