@@ -119,8 +119,13 @@ const createBookingIntoDB = async (
   const user = await User.isUsersExistsByCustomId(userEmail);
   const userId = user?._id;
 
-  const transactionId = `TXN-${Date.now()}`;
+  function generateUniqueTransactionId() {
+    const randomString = Math.random().toString(36).substr(2, 9);
+    const transactionId = `TXN-${Date.now()}-${randomString}`;
+    return transactionId;
+  }
 
+  const transactionId = generateUniqueTransactionId();
   const result = await Booking.create({
     date,
     endTime,
@@ -129,7 +134,6 @@ const createBookingIntoDB = async (
     payableAmount,
     startTime,
     user: userId,
-    paymentStatus: 'pending',
     transactionId,
   });
 
@@ -150,7 +154,7 @@ const createBookingIntoDB = async (
   return {paymentSession, result};
 };
 
-//* get all bookings by admin
+//! get all bookings by admin
 const getAllBookingFromDB = async (query: Record<string, unknown>) => {
   // const result = await Booking.find().populate('facility');
   const bookingQuery = new QueryBuilder(
@@ -179,7 +183,7 @@ const getAllBookingByUserFromDB = async (
   const userId = users._id;
 
   const bookingQuery = new QueryBuilder(
-    Booking.find({ user: userId }).populate('facility'),
+    Booking.find({ user: userId }).populate('facility').populate('user'),
     query,
   )
     .search(BookingSearchableFields)

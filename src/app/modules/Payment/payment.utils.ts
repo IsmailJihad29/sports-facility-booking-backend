@@ -16,7 +16,7 @@ export const initialPayment = async (paymentData: TPaymentData) => {
       store_id: config.store_id,
       signature_key: config.signature_key,
       tran_id: paymentData.transactionId,
-      success_url: `${config.base_url}/api/payment/confirmation?transactionId=${paymentData.transactionId}&status=success`,
+      success_url: `http://localhost:3000/api/payment/confirmation`,
       fail_url: `${config.base_url}/api/payment/confirmation?status=failed`,
       cancel_url: `${config.base_url_frontend}`,
       amount: paymentData.amount,
